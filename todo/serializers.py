@@ -10,7 +10,6 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
 class ToDoSerializer(serializers.ModelSerializer):
     projects = ProjectsSerializer(many=True, read_only=True)
-
     class Meta:
         model = ToDo
         fields = '__all__'
