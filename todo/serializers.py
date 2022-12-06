@@ -6,8 +6,6 @@ from .models import Projects, ToDo
 
 
 class ProjectsSerializer(serializers.ModelSerializer):
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-    users = serializers.StringRelatedField(many=True, read_only=False)
 
     class Meta:
         model = Projects
@@ -15,8 +13,6 @@ class ProjectsSerializer(serializers.ModelSerializer):
 
 
 class ToDoSerializer(serializers.ModelSerializer):
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-    user = UserModelSerializer()
 
     class Meta:
         model = ToDo

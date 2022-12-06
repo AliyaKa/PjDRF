@@ -17,9 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from users.views import UserModelAPIView
-from todo.views import ProjectsAPIView, ToDoAPIView
+from todo.views import ProjectsModelViewSet, ToDoAPIModelViewSet
 
 router = DefaultRouter()
+router.register('projects', ProjectsModelViewSet)
+router.register('todo', ToDoAPIModelViewSet)
 
 
 urlpatterns = [
@@ -28,8 +30,4 @@ urlpatterns = [
     path('api/', include(router.urls)),
     path('api/users/', UserModelAPIView.as_view()),
     path('api/users/<int:pk>/', UserModelAPIView.as_view()),
-    path('api/projects/', ProjectsAPIView.as_view()),
-    path('api/projects/<int:pk>/', ProjectsAPIView.as_view()),
-    path('api/todo/', ToDoAPIView.as_view()),
-    path('api/todo/<int:pk>/', ToDoAPIView.as_view()),
 ]
