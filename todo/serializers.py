@@ -1,19 +1,20 @@
 from rest_framework import serializers
 from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 
-from users.serializers import UserModelSerializer
 from .models import Projects, ToDo
 
 
-class ProjectsSerializer(serializers.ModelSerializer):
+class ProjectsSerializer(serializers.HyperlinkedModelSerializer):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
     class Meta:
         model = Projects
-        fields = '__all__'
+        fields = ['id', 'title', 'users']
 
 
-class ToDoSerializer(serializers.ModelSerializer):
+class ToDoSerializer(serializers.HyperlinkedModelSerializer):
+    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
     class Meta:
         model = ToDo
-        fields = '__all__'
+        fields = ['id', 'body', 'created', 'updated', 'is_complete', 'user', 'proj']
