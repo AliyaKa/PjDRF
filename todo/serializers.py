@@ -4,7 +4,7 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from .models import Projects, ToDo
 
 
-class ProjectsSerializer(serializers.HyperlinkedModelSerializer):
+class ProjectsSerializer(serializers.ModelSerializer):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
     class Meta:
@@ -12,7 +12,7 @@ class ProjectsSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['id', 'title', 'users']
 
 
-class ToDoSerializer(serializers.HyperlinkedModelSerializer):
+class ToDoSerializer(serializers.ModelSerializer):
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
     class Meta:

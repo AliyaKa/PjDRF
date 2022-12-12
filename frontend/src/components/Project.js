@@ -1,11 +1,10 @@
 import React from 'react'
-
 const ProjectItem = ({item}) => {
     return (
         <tr>
+            <td>{item.id}</td>
             <td>{item.title}</td>
-            <td>{item.href}</td>
-
+            <td>{item.users}</td>
         </tr>
     )
 }
@@ -13,10 +12,10 @@ const ProjectItem = ({item}) => {
 const ProjectList = ({projects}) => {
     return (
         <table>
+            <th>Id</th>
             <th>Title</th>
-            <th>Href</th>
-
-            {projects.map((item) => <ProjectItem item={item} />)}
+            <th>UserName</th>
+                {projects.map((item) => <ProjectItem item={item} />)}
         </table>
     )
 }

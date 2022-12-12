@@ -3,10 +3,12 @@ import React from 'react';
 import './App.css';
 import UserList from './components/User.js';
 import ProjectList from './components/Project.js';
-import ToDoList from './components/ToDo.js';
+import TodoList from './components/ToDo.js';
+import ProjectsUser from './components/ProjectsUser.js';
 import Menu from "./components/Menu.js";
 import Footer from "./components/Footer.js";
-import {BrowserRouter, Route, Routes, Link} from "react-router-dom";
+import NotFound404 from "./components/NotFound404.js";
+import {BrowserRouter, Route, Routes, Link, Navigate} from "react-router-dom";
 
 class App extends React.Component {
 
@@ -15,34 +17,24 @@ class App extends React.Component {
         this.state = {
             'users': [],
             'projects': [],
-            'todo': [],
+            'todo': []
         }
     }
 
     componentDidMount() {
 
-            axios.get('http://127.0.0.1:8000/api/users/').then(response => {
-                  this.setState(
-                    {
-                        'users': response.data
-                    }
-                )
+            axios.get('http://127.0.0.1:8000/api/users/')
+            .then(response => {
+               this.setState({'users': response.data})
             }).catch(error => console.log(error))
 
-            axios.get('http://127.0.0.1:8000/api/projects/').then(response => {
-                  this.setState(
-                    {
-                        'todo.projects': response.data
-                    }
-                )
+            axios.get('http://127.0.0.1:8000/api/projects/')
+            .then(response => {
+               this.setState({'projects': response.data})
             }).catch(error => console.log(error))
 
             axios.get('http://127.0.0.1:8000/api/todo/').then(response => {
-                  this.setState(
-                    {
-                        'item': response.data
-                    }
-                )
+                  this.setState({'todo': response.data})
             }).catch(error => console.log(error))
     }
     render () {
@@ -62,9 +54,14 @@ class App extends React.Component {
                         </li>
                     </nav>
                     <Routes>
-                        <Route exact path='/users' element={<UserList users={this.state.users} />}/>
-                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects} />}/>
-                        <Route exact path='/todo' element={<ToDoList todo={this.state.todo} />}/>
+                        <Route exact path='/' element={<Navigate to='/users'/>}/>
+                        <Route path='/users'>
+                            <Route index element={<UserList users={this.state.users}/>}/>
+                            <Route path=':userId' element={<ProjectsUser projects={this.state.projects}/>}/>
+                        </Route>
+                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects}/>}/>
+                        <Route exact path='/todo' element={<TodoList todo={this.state.todo} />}/>
+                        <Route path='*' element={<NotFound404/>}/>
                     </Routes>
                 </BrowserRouter>
                 <Footer />
