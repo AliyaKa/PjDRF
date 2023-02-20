@@ -16,22 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from users.views import UserViewSet
-from todo.views import ProjectsModelViewSet, ToDoAPIModelViewSet, ProjectsKwargsFilterView, ToDoKwargsFilterView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from users.views import CustomUserViewSet
+from todo.views import ProjectsModelViewSet, ToDoModelViewSet, ProjectsKwargsFilterView
+from rest_framework.authtoken import views
 
 router = DefaultRouter()
 router.register('projects', ProjectsModelViewSet)
-router.register('todo', ToDoAPIModelViewSet)
-router.register('users', UserViewSet)
-
-
+router.register('todo', ToDoModelViewSet)
+router.register('users', CustomUserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
     path('filters/projects/<str:title>', ProjectsKwargsFilterView.as_view()),
-    path('filters/todo/<str:proj>', ToDoKwargsFilterView.as_view()),
-
+    path('api-token/', views.obtain_auth_token),
+    path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ]

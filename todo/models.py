@@ -3,8 +3,8 @@ from users.models import CustomUser
 
 
 class Projects(models.Model):
-    title = models.CharField(max_length=75)
-    href = models.URLField
+    title = models.CharField(max_length=32, unique=True)
+    repository = models.URLField(blank=True)
     users = models.ManyToManyField(CustomUser)
 
     def __str__(self):
@@ -12,12 +12,12 @@ class Projects(models.Model):
 
 
 class ToDo(models.Model):
-    body = models.TextField(blank=True, null=True)
+    body = models.TextField()
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(CustomUser, models.PROTECT)
-    is_complete = models.BooleanField('Завершено', default=False)
-    proj = models.ForeignKey('Projects', on_delete=models.PROTECT, null=True)
+    is_complete = models.BooleanField('Завершено', default=True)
+    proj = models.ForeignKey(Projects, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.body

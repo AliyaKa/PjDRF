@@ -1,20 +1,15 @@
 from rest_framework import serializers
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-
 from .models import Projects, ToDo
 
 
 class ProjectsSerializer(serializers.ModelSerializer):
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-
     class Meta:
         model = Projects
-        fields = ['id', 'title', 'users']
+        fields = '__all__'
 
 
 class ToDoSerializer(serializers.ModelSerializer):
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-
     class Meta:
         model = ToDo
-        fields = ['id', 'body', 'created', 'updated', 'is_complete', 'user', 'proj']
+       # exclude = ('is_complete',)
+        fields = ['id', 'body', 'created', 'updated', 'user', 'proj']

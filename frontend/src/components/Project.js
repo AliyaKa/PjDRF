@@ -1,10 +1,9 @@
 import React from 'react'
+import {Link} from 'react-router-dom'
 const ProjectItem = ({item}) => {
     return (
         <tr>
-            <td>{item.id}</td>
-            <td>{item.title}</td>
-            <td>{item.users}</td>
+            <td><Link to={`/projects/${item.id}`}>{item.title}</Link></td>
         </tr>
     )
 }
@@ -12,9 +11,7 @@ const ProjectItem = ({item}) => {
 const ProjectList = ({projects}) => {
     return (
         <table>
-            <th>Id</th>
             <th>Title</th>
-            <th>UserName</th>
                 {projects.map((item) => <ProjectItem item={item} />)}
         </table>
     )

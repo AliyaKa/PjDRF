@@ -5,7 +5,7 @@ const TodoItem = ({item}) => {
     return (
         <tr>
             <td>{item.body}</td>
-            <td>{item.username}</td>
+            <td>{item.user}</td>
             <td>{item.is_complete}</td>
         </tr>
     )
