@@ -8,14 +8,14 @@ from .managers import CustomUserManager
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(
-        _("username"),
+        _('username'),
         max_length=150,
         unique=True,
     )
-    first_name = models.CharField(_("first name"), max_length=150, blank=True)
-    last_name = models.CharField(_("last name"), max_length=150, blank=True)
+    firstname = models.CharField(_('first name'), max_length=150, blank=True)
+    lastname = models.CharField(_('last name'), max_length=150, blank=True)
     email = models.CharField(
-        _("email address"),
+        _('email address'),
         max_length=256,
         unique=True,
         error_messages={
@@ -32,7 +32,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     EMAIL_FIELD = "email"
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["email"]
-
 
     def __str__(self):
         return self.username

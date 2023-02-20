@@ -1,63 +1,45 @@
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework.generics import ListAPIView
+from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.viewsets import ModelViewSet
 from .models import Projects, ToDo
 from .serializers import ProjectsSerializer, ToDoSerializer
-from rest_framework.response import Response
+from .filters import ToDoFilter
 
 
-class ProjectsAPIView(APIView):
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
+# class ProjectsPagination(PageNumberPagination):
+#     page_size = 10
 
-    def get(self, request, format=None):
-        projects = Projects.objects.all()
-        serializer = ProjectsSerializer(projects, many=True)
-        return Response(serializer.data)
+class ProjectsModelViewSet(ModelViewSet):
+    queryset = Projects.objects.all()
+    serializer_class = ProjectsSerializer
+    # pagination_class = ProjectsPagination
 
-    def post(self, request, format=None):
-        serializer = ProjectsSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
 
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method PUT not allowed"})
+class ProjectsKwargsFilterView(ListAPIView):
+    serializer_class = ProjectsSerializer
+
+    def get_queryset(self):
+        title = self.kwargs['title']
+        return Projects.objects.filter(title__contains=title)
+
+
+# class ToDoPagination(PageNumberPagination):
+#     page_size = 20
+
+class ToDoModelViewSet(ModelViewSet):
+    queryset = ToDo.objects.all()
+    serializer_class = ToDoSerializer
+    # pagination_class = ToDoPagination
+    filterset_class = ToDoFilter
+
+    def destroy(self, request, *args, **kwargs):
         try:
-            instance = Projects.objects.get(pk=pk)
+            instance = self.get_object()
+            instance.is_complete = False
+            instance.save()
         except:
-            return Response({"error": "Object does not exists"})
-        serializer = ProjectsSerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
-class ToDoAPIView(APIView):
-    renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
-
-    def get(self, request, format=None):
-        todo = ToDo.objects.all()
-        serializer = ToDoSerializer(todo, many=True)
-        return Response(serializer.data)
-
-    def post(self, request, format=None):
-        serializer = ToDoSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-    def put(self, request, *args, **kwargs):
-        pk = kwargs.get("pk", None)
-        if not pk:
-            return Response({"error": "Method PUT not allowed"})
-        try:
-            instance = ToDo.objects.get(pk=pk)
-        except:
-            return Response({"error": "Object does not exists"})
-        serializer = ToDoSerializer(data=request.data, instance=instance)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
-
-
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)

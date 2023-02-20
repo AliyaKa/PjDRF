@@ -16,20 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from users.views import UserModelAPIView
-from todo.views import ProjectsAPIView, ToDoAPIView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
+from users.views import CustomUserViewSet
+from todo.views import ProjectsModelViewSet, ToDoModelViewSet, ProjectsKwargsFilterView
+from rest_framework.authtoken import views
 
 router = DefaultRouter()
-
+router.register('projects', ProjectsModelViewSet)
+router.register('todo', ToDoModelViewSet)
+router.register('users', CustomUserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
-    path('api/users/', UserModelAPIView.as_view()),
-    path('api/users/<int:pk>/', UserModelAPIView.as_view()),
-    path('api/projects/', ProjectsAPIView.as_view()),
-    path('api/projects/<int:pk>/', ProjectsAPIView.as_view()),
-    path('api/todo/', ToDoAPIView.as_view()),
-    path('api/todo/<int:pk>/', ToDoAPIView.as_view()),
+    path('filters/projects/<str:title>', ProjectsKwargsFilterView.as_view()),
+    path('api-token/', views.obtain_auth_token),
+    path('api/token', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh')
 ]
